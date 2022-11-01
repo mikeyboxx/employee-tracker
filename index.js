@@ -10,6 +10,7 @@ const choices = require('./utils/mainMenu');
 const viewAllDepartments = require('./helpers/viewAllDepartments');
 const viewAllRoles = require('./helpers/viewAllRoles');
 const viewAllEmployees = require('./helpers/viewAllEmployees');
+const addDepartment = require('./helpers/addDepartment');
 
 const FgCyan = "\x1b[36m";
 
@@ -55,10 +56,11 @@ const FgCyan = "\x1b[36m";
       };
 
       if (choice === 'Add Department'){
-        const name = await promptInput('What is the name of the department?');
+        await addDepartment(db);
+        // const name = await promptInput('What is the name of the department?');
         
-        const {insertId} = await db.addDepartment(name);
-        console.log(`\n${FgCyan}Added ${name} department to the database. id: ${insertId}`);
+        // const {insertId} = await db.addDepartment(name);
+        // console.log(`\n${FgCyan}Added ${name} department to the database. id: ${insertId}`);
       };
 
       if (choice === 'Add Role'){
