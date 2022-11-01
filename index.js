@@ -12,6 +12,7 @@ const viewAllRoles = require('./helpers/viewAllRoles');
 const viewAllEmployees = require('./helpers/viewAllEmployees');
 const addDepartment = require('./helpers/addDepartment');
 const addRole = require('./helpers/addRole');
+const addEmployee = require('./helpers/addEmployee');
 
 const FgCyan = "\x1b[36m";
 
@@ -82,26 +83,27 @@ const FgCyan = "\x1b[36m";
       }
 
       if (choice === 'Add Employee'){
-        let values = await db.getRoles();
+        await addEmployee(db);
+        // let values = await db.getRoles();
         
-        if (values.length === 0) 
-          console.log(`\n${FgCyan}There are no Roles and/or Departments to add the employee to.`)
-        else {
-          const roleChoices = values.map(el => ({name:  el.Title + ' - ' + el.Department, value: el.Id }));
-          const first_name = await promptInput(`What is the employee's first name?`);
-          const last_name = await promptInput(`What is the employee's last name?`);
-          const role_id = await promptList(`What is the employee's role?`, roleChoices); 
+        // if (values.length === 0) 
+        //   console.log(`\n${FgCyan}There are no Roles and/or Departments to add the employee to.`)
+        // else {
+        //   const roleChoices = values.map(el => ({name:  el.Title + ' - ' + el.Department, value: el.Id }));
+        //   const first_name = await promptInput(`What is the employee's first name?`);
+        //   const last_name = await promptInput(`What is the employee's last name?`);
+        //   const role_id = await promptList(`What is the employee's role?`, roleChoices); 
 
-          let manager_id = null;
-          values = await db.getEmployeeNames();
-          if (values.length > 0) {
-            const managerChoices = values.map(el => ({name: el.first_name + ' ' + el.last_name, value: el.id }));
-            manager_id = await promptList(`What is the employee's manager?`, managerChoices);
-          };
+        //   let manager_id = null;
+        //   values = await db.getEmployeeNames();
+        //   if (values.length > 0) {
+        //     const managerChoices = values.map(el => ({name: el.first_name + ' ' + el.last_name, value: el.id }));
+        //     manager_id = await promptList(`What is the employee's manager?`, managerChoices);
+        //   };
 
-          const {insertId} = await db.addEmployee(first_name, last_name, role_id, manager_id);
-          console.log(`\n${FgCyan}Added ${first_name} ${last_name} to the database. id: ${insertId}`);
-        }
+        //   const {insertId} = await db.addEmployee(first_name, last_name, role_id, manager_id);
+        //   console.log(`\n${FgCyan}Added ${first_name} ${last_name} to the database. id: ${insertId}`);
+        // }
       }
       
       if (choice === 'Delete Department'){
