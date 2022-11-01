@@ -38,12 +38,19 @@ const db = require('./db/database');
 
     // const {insertId} = await db.addDepartment('Security');
     // console.log(insertId);
-    const {insertId} = await db.addRole({
-      title: 'Jr. Programmer',
-      salary: 85000,
-      department_id: 7
+
+    // const {insertId} = await db.addRole({
+    //   title: 'Jr. Programmer',
+    //   salary: 85000,
+    //   department_id: 7
+    // });
+    // console.log(insertId);
+
+    const results = await db.updateDepartment({
+      id: 8,
+      name: 'Education',
     });
-    console.log(insertId);
+    console.log(results);
 
 
   } catch (err) {

@@ -26,4 +26,31 @@ module.exports = {
   addEmployee: ({first_name, last_name, role_id, manager_id}) => 
     dbExecute(`INSERT INTO roles (first_name, last_name, role_id, manager_id) 
                VALUES ('${first_name}', '${last_name}', ${role_id}, ${manager_id});`),
+
+  updateDepartment: ({id, name}) => 
+    dbExecute(`UPDATE departments 
+               SET name = '${name}'
+               WHERE id = ${id}`),
+  
+  updateRole: ({id, title, salary, department_id}) => 
+    dbExecute(`UPDATE roles 
+               SET title = '${title}', salary = '${salary}', department_id = '${department_id}'
+               WHERE id = ${id}`),
+
+  updateEmployee: ({id, first_name, last_name, role_id, manager_id}) => 
+    dbExecute(`UPDATE roles 
+               SET first_name = '${first_name}', last_name = '${last_name}', role_id = '${role_id}, manager_id = '${manager_id}'
+               WHERE id = ${id}`),
+
+  deleteDepartment: id => 
+    dbExecute(`DELETE FROM departments 
+               WHERE id = ${id}`),
+
+  deleteRole: id => 
+    dbExecute(`DELETE FROM roles 
+               WHERE id = ${id}`),
+
+  deleteEmployee: id => 
+    dbExecute(`DELETE FROM employees 
+               WHERE id = ${id}`),
 }
