@@ -16,7 +16,7 @@ module.exports = {
   getRoles: () => dbExecute(`SELECT a.id as 'Id', a.title as 'Title', a.salary as 'Salary', b.name as 'Department'
                                FROM roles a, departments b
                               WHERE a.department_id = b.id
-                              ORDER BY b.name, a.title;`),
+                              ORDER BY a.id`),
 
   getEmployees: () => dbExecute(`SELECT a.id, a.first_name as 'First Name', a.last_name as 'Last Name', 
                                         c.title as 'Title', d.name as 'Department', c.salary as 'Salary',
