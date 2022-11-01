@@ -15,6 +15,7 @@ const addRole = require('./helpers/addRole');
 const addEmployee = require('./helpers/addEmployee');
 const deleteDepartment = require('./helpers/deleteDepartment');
 const deleteRole = require('./helpers/deleteRole');
+const deleteEmployee = require('./helpers/deleteEmployee');
 
 const FgCyan = "\x1b[36m";
 
@@ -141,18 +142,19 @@ const FgCyan = "\x1b[36m";
       };
 
       if (choice === 'Delete Employee'){
-        const values = await db.getEmployees();
+        await deleteEmployee(db);
+        // const values = await db.getEmployees();
         
-        if (values.length === 0) 
-          console.log(`\n${FgCyan}There are no Employees to delete.`)
-        else {
-          const employeeChoices = values.map(el => ({name: el.first_name + ' ' + el.last_name, value: el.id }));
-          const employee_id = await promptList('Which employee would like to delete?', employeeChoices); 
-          const {name} = employeeChoices.find(el => el.value === employee_id);
-          await db.deleteEmployee(employee_id);
+        // if (values.length === 0) 
+        //   console.log(`\n${FgCyan}There are no Employees to delete.`)
+        // else {
+        //   const employeeChoices = values.map(el => ({name: el.first_name + ' ' + el.last_name, value: el.id }));
+        //   const employee_id = await promptList('Which employee would like to delete?', employeeChoices); 
+        //   const {name} = employeeChoices.find(el => el.value === employee_id);
+        //   await db.deleteEmployee(employee_id);
 
-          console.log(`\n${FgCyan}${name} employee was deleted from the database.`);
-        }
+        //   console.log(`\n${FgCyan}${name} employee was deleted from the database.`);
+        // }
       };
 
       if (choice === 'Update Employee Role'){
