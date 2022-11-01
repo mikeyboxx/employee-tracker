@@ -9,6 +9,7 @@ const promptNumber = require('./utils/promptNumber');
 const choices = require('./utils/mainMenu');
 const viewAllDepartments = require('./helpers/viewAllDepartments');
 const viewAllRoles = require('./helpers/viewAllRoles');
+const viewAllEmployees = require('./helpers/viewAllEmployees');
 
 const FgCyan = "\x1b[36m";
 
@@ -44,12 +45,13 @@ const FgCyan = "\x1b[36m";
       };
 
       if (choice === 'View All Employees'){
-        const values = await db.getEmployees();
+        await viewAllEmployees(db);
+        // const values = await db.getEmployees();
 
-        if (values.length === 0) 
-          console.log(`\n${FgCyan}There are no Employees.`)
-        else
-          console.table(`\n${FgCyan}Employees`, values);
+        // if (values.length === 0) 
+        //   console.log(`\n${FgCyan}There are no Employees.`)
+        // else
+        //   console.table(`\n${FgCyan}Employees`, values);
       };
 
       if (choice === 'Add Department'){
