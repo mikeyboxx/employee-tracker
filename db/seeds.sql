@@ -28,7 +28,8 @@ VALUES ('John',  'Smith', 1, NULL),
        ('Mary',  'Jane', 5, 1),
        ('Billy',  'Bob', 3, 2),
        ('Joe',  'Shmoe', 4, NULL),
+       ('Harley',  'Quinn', 9, NULL),
        ('Crazy',  'Mike', 6, 3),
        ('Willy',  'Eye', 2, 2),
        ('Bob',  'Hope', 1, 5),
-       ('Ron',  'Gun', 7, 1;
+       ('Ron',  'Gun', 7, 1);

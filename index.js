@@ -23,7 +23,7 @@ const start = async ()=>{
       switch (choice) {
         case 'View All Departments': await viewAllDepartments(db); break;
         case 'View All Roles': await viewAllRoles(db); break;
-        case 'View All Departments': await viewAllEmployees(db); break;
+        case 'View All Employees': await viewAllEmployees(db); break;
         case 'Add Department': await addDepartment(db); break;
         case 'Add Role': await addRole(db); break;
         case 'Add Employee': await addEmployee(db); break;
