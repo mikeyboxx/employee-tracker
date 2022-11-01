@@ -1,40 +1,156 @@
-// const Database = function (){
 
-//   this.dbExecute = function (qry_str) { 
-//     return new Promise(async (resolve, reject)=>{
-//       try {
-//         const conn = await require('./db/getConnection');
-//         const [rows] = await conn.execute(`${qry_str};`);
-//         resolve(rows);
-//       } catch (err){
-//         reject(err)
-//       }
-//     })
-//   }
-// };
-  
-
-// Database.prototype.getDepartments = function (){
-//     return this.dbExecute(`SELECT * FROM departmens;`);
-// }
-// Database.prototype.getDepartments = function (){
-//     return this.dbExecute(`SELECT * FROM departments;`);
-// }
-// Database.prototype.getDepartments = this.dbExecute.bind(this, `SELECT * FROM departments;`);
-// Database.prototype.getDepartments = this.test;
-
-// const db = new Database();
-
-const db = require('./db/database');
+  const cTable = require('console.table');
+  const inquirer = require('inquirer');
+  const chalk = require('chalk');
+  const db = require('./db/database');
+  const promptList = require('./utils/promptList');
+const promptInput = require('./utils/promptInput');
 
 (async ()=>{
   try {
-    let rows = {};
-  //   let rows = await db.getDepartments();
-  //   console.log(rows);
+    // let rows = {};
+    // const values = await db.getDepartments();
+    // console.table(values);
+
+    // const choices = [
+    //   {
+    //     name: 'View All Departments',
+    //     value: 0,
+    //   },
+    //   {
+    //     name: 'View All Roles',
+    //     value: 1,
+    //   },
+    //   {
+    //     name: 'View All Employees',
+    //     value: 2,
+    //   },
+    //   {
+    //     name: new inquirer.Separator(),
+    //     value: -1,
+    //   }
+    //   {
+    //     name: 'View All Departments',
+    //     value: 4,
+    //   },
+    //   {
+    //     name: 'View All Roles',
+    //     value: 5,
+    //   },
+    //   {
+    //     name: 'View All Employees',
+    //     value: 2,
+    //   },
+    //   {
+    //     name: new inquirer.Separator(),
+    //     value: 3,
+    //   }
+    // ];
+    const choices = [
+      'View All Departments',
+      'View All Roles',
+      'View All Employees',
+      new inquirer.Separator(),
+      'Add Department',
+      'Add Role',
+      'Add Employee',
+      new inquirer.Separator(),
+      'Update Department',
+      'Update Role',
+      'Update Employee',
+      new inquirer.Separator(),
+      'Delete Department',
+      'Delete Role',
+      'Delete Employee',
+      new inquirer.Separator(),
+      'Quit'
+    ];
+
+const Reset = "\x1b[0m";
+const Bright = "\x1b[1m";
+const Dim = "\x1b[2m";
+const Underscore = "\x1b[4m";
+const Blink = "\x1b[5m";
+const Reverse = "\x1b[7m";
+const Hidden = "\x1b[8m";
+
+const FgBlack = "\x1b[30m";
+const FgRed = "\x1b[31m";
+const FgGreen = "\x1b[32m";
+const FgYellow = "\x1b[33m";
+const FgBlue = "\x1b[34m";
+const FgMagenta = "\x1b[35m";
+const FgCyan = "\x1b[36m";
+const FgWhite = "\x1b[37m";
+
+const BgBlack = "\x1b[40m";
+const BgRed = "\x1b[41m";
+const BgGreen = "\x1b[42m";
+const BgYellow = "\x1b[43m";
+const BgBlue = "\x1b[44m";
+const BgMagenta = "\x1b[45m";
+const BgCyan = "\x1b[46m";
+const BgWhite = "\x1b[47m";
     
-  //   rows = await db.getRoles();
-  //   console.log(rows);
+    console.clear();
+    let choice = await promptList('What would you like to do?', choices); 
+
+
+    while (choice !== 'Quit'){
+      if (choice === 'View All Departments'){
+        const values = await db.getDepartments();
+
+        if (values.length === 0) 
+          console.log(`\n${FgCyan}There are no Departments.`)
+        else
+          console.table(`\n${FgCyan}Departments`, values);
+      };
+      
+      if (choice === 'View All Roles'){
+        const values = await db.getRoles();
+
+        if (values.length === 0) 
+          console.log(`\n${FgCyan}There are no Roles.`)
+        else
+          console.table(`\n${FgCyan}Roles`, values);
+      };
+
+      if (choice === 'View All Employees'){
+        const values = await db.getEmployees();
+
+        if (values.length === 0) 
+          console.log(`\n${FgCyan}There are no Employees.`)
+        else
+          console.table(`\n${FgCyan}Employees`, values);
+      };
+
+      if (choice === 'Add Department'){
+        const name = await promptInput('What is the name of the department?');
+        const {insertId} = await db.addDepartment(name);
+        console.log(`\n${FgCyan}Added ${name} department to the database. id: ${insertId}`);
+      }
+
+      if (choice === 'Add Role'){
+        const name = await promptInput('What is the name of the Role?');
+        
+        const {insertId} = await db.addDepartment(name);
+        console.log(`\n${FgCyan}Added ${name} department to the database. id: ${insertId}`);
+      }
+      
+      choice = await promptList('\nWhat would you like to do now?', choices); 
+    }
+
+    process.exit(1);
+    
+    // rows = await db.getRoles();
+    // console.table(rows);
+
+    // let rows = await db.getDepartmentColumns();
+
+    // const fields = rows.map(({Field})=>Field);
+    // console.table(fields, values);
+
+
 
     // const {insertId} = await db.addDepartment('Security');
     // console.log(insertId);
@@ -46,40 +162,20 @@ const db = require('./db/database');
     // });
     // console.log(insertId);
 
-    const results = await db.updateDepartment({
-      id: 8,
-      name: 'Education',
-    });
-    console.log(results);
+    // const results = await db.updateDepartment({
+    //   id: 8,
+    //   name: 'Education',
+    // });
+    // console.log(results);
 
 
   } catch (err) {
     console.log(err.message);
   } 
 })();
-// db.getDepartments(`SELECT * FROM departments;`);
 
 
-// const dbExecute = (qry_str)=> new Promise(async (resolve, reject)=>{
-//   try {
-//     const conn = await require('./db/getConnection');
-//     const [rows] = await conn.execute(`${qry_str};`);
-//     resolve(rows);
-//   } catch (err){
-//     reject(err)
-//   }
-// });
 
-
-// const getDepartments = ()=> new Promise(async (resolve, reject)=>{
-//   try {
-//     const conn = await require('./db/getConnection');
-//     const [rows] = await conn.execute(`SELECT * FROM department;`);
-//     resolve(rows);
-//   } catch (err){
-//     reject(err)
-//   }
-// });
 
 // Prompt user with list
 //  - View all departments
@@ -98,108 +194,3 @@ const db = require('./db/database');
 //  - Delete role
 //  - Delete employee
 //  ----------------
-
-
-// dbExecute(`SELECT * FROM department`)
-//   .then(departments => console.log(departments))
-//   .catch(err => console.log(err.message));
-
-// dbExecute(`DELETE FROM department WHERE id >=4`)
-//   .then(departments => console.log(departments))
-//   .catch(err => console.log(err.message));  
-
-
-
-
-
-// (async ()=>{
-//   try {
-//     const conn = await require('./db/getConnection');
-
-//     const [rows] = await conn.execute(`SELECT * FROM departmet;`)
-//     console.log(rows);
-//   } catch (err){
-//     console.log(err.message);
-//   }
-// })();
-
-// (async ()=>{
-//   const conn = await getConnection();
-//   const [error, rows, fields] = await conn.execute(`SELECT * FROM departmet;`);
-// })();
-
-// conn
-//   .then(conn=> {
-//     return conn.execute(`SELECT * FROM department;`);
-//     // console.log(error, rows, fields);
-//   })
-//   .then(resp=>{
-//     const [error, rows, fields] = resp;
-//     console.log(error, rows, fields);
-//   })
-//   .catch(err=>console.log(err.message));
-
-
-
-// conn.getConnection(()=>{console.log(`Connected to the employee_db database.`)});
-// var query_str = `INSERT INTO department (name) VALUES ('Marketing');`;
-
-//   conn.query(query_str, function (err, rows, fields) {
-//       if (err) {
-//           console.log(err);
-//       }
-//       console.log(rows);
-//   });
-
- 
-  // function insertDepartment(name)
-  // {
-  //   return new Promise(function(resolve, reject) {
-  //       // The Promise constructor should catch any errors thrown on
-  //       // this tick. Alternately, try/catch and reject(err) on catch.
-
-  //       var query_str = `INSERT INTO department (name) VALUES (${name});`;
-
-  //       conn.query(query_str, function (err, rows, fields) {
-  //           if (err) {
-  //               return reject(err);
-  //           }
-  //           resolve(rows);
-  //       });
-  //   });
-  // };
-
-  // (async ()=>{
-  //   await insertDepartment('P&S');
-  //   await insertDepartment('Marketing');
-  //   await insertDepartment('Human Resources');
-  //   await insertDepartment('Legal');
-  // })();
-
-    
-
-  // const insertDepartment = function({name}){
-  //   console.log(name);
-  //   console.log(this);
-  //   this.query(`INSERT INTO department (name) VALUES (${name});`, function (err, results) {
-  //     console.log(results);
-  //     // return results;
-  //   })
-  // }.bind(mysql.createConnection(
-  //   {
-  //     host: 'localhost',
-  //     user: 'root',
-  //     password: 'password',
-  //     database: 'employee_db'
-  //   },
-  //   console.log(`Connected to the employee_db database.`)
-  // ));
-
-
-  // process.exit(1);
-
-
-  // connection.query('INSERT INTO posts SET ?', {title: 'test'}, function (error, results, fields) {
-  //   if (error) throw error;
-  //   console.log(results.insertId);
-  // });

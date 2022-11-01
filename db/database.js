@@ -34,12 +34,12 @@ module.exports = {
   
   updateRole: ({id, title, salary, department_id}) => 
     dbExecute(`UPDATE roles 
-               SET title = '${title}', salary = '${salary}', department_id = '${department_id}'
+               SET title = '${title}', salary = ${salary}, department_id = ${department_id}
                WHERE id = ${id}`),
 
   updateEmployee: ({id, first_name, last_name, role_id, manager_id}) => 
     dbExecute(`UPDATE roles 
-               SET first_name = '${first_name}', last_name = '${last_name}', role_id = '${role_id}, manager_id = '${manager_id}'
+               SET first_name = '${first_name}', last_name = '${last_name}', role_id = ${role_id}, manager_id = ${manager_id}
                WHERE id = ${id}`),
 
   deleteDepartment: id => 
@@ -53,4 +53,6 @@ module.exports = {
   deleteEmployee: id => 
     dbExecute(`DELETE FROM employees 
                WHERE id = ${id}`),
+
+  // getDepartmentColumns: () => dbExecute(`SHOW COLUMNS FROM departments`)
 }
