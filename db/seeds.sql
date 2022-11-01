@@ -26,8 +26,9 @@ VALUES ('Salesperson', 150000, 5),
 INSERT INTO employees (first_name, last_name, role_id, manager_id)
 VALUES ('John',  'Smith', 1, NULL),
        ('Mary',  'Jane', 5, 1),
-       ('Billy',  'Bob', 3, 1),
-       ('Joe',  'Shmoe', 4, 3),
+       ('Billy',  'Bob', 3, 2),
+       ('Joe',  'Shmoe', 4, NULL),
        ('Crazy',  'Mike', 6, 3),
        ('Willy',  'Eye', 2, 2),
-       ('Ron',  'Gun', 7, 2);
+       ('Bob',  'Hope', 1, 5),
+       ('Ron',  'Gun', 7, 1;
