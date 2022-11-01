@@ -7,7 +7,7 @@ const  promptList = function (message, choices) {
         type: "list",
         message: message,  
         choices: choices,  
-        pageSize: 30,
+        pageSize: 40,
     }])
     .then(answer => answer.val); // user choice
 }

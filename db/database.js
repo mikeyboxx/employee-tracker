@@ -12,14 +12,21 @@ const dbExecute = function (qry_str) {
   
 module.exports = {
   getDepartments: () => dbExecute(`SELECT * FROM departments;`),
-  getRoles: () => dbExecute(`SELECT * FROM roles;`),
-  getEmployees: () => dbExecute(`SELECT * FROM employees;`),
+  
+  getRoles: () => dbExecute(`SELECT a.id, a.title, a.salary, b.name as 'department'
+                               FROM roles a, departments b
+                              WHERE a.department_id = b.id;`),
 
+  getEmployees: () => dbExecute(`SELECT a.id, a.first_name, a.last_name, c.title, c.salary, d.name
+                                   FROM (employees a, roles c, departments d)
+                                   LEFT OUTER JOIN employees b ON a.manager_id = b.id
+                                  WHERE a.role_id = c.id 
+                                    AND c.department_id = d.id;`),
   addDepartment: name => 
     dbExecute(`INSERT INTO departments (name) 
                VALUES ('${name}');`),
 
-  addRole: ({title, salary, department_id}) => 
+  addRole: (title, salary, department_id) => 
     dbExecute(`INSERT INTO roles (title, salary, department_id) 
                VALUES ('${title}', ${salary}, ${department_id});`),
 
