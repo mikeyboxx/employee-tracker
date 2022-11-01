@@ -1,6 +1,6 @@
-DELETE FROM employees;
-DELETE FROM roles;
-DELETE FROM departments;
+-- DELETE FROM employees;
+-- DELETE FROM roles;
+-- DELETE FROM departments;
 
 INSERT INTO departments (name)
 VALUES ('Marketing'),
@@ -21,4 +21,13 @@ VALUES ('Salesperson', 150000, 5),
        ('Lawyer', 250000, 3),
        ('Accountant', 150000, 4),
        ('Financial Advisor', 550000, 6),
-       ('Quantitative Analyst', 250000, 1)
+       ('Quantitative Analyst', 250000, 1);
+
+INSERT INTO employees (first_name, last_name, role_id, manager_id)
+VALUES ('John',  'Smith', 1, NULL),
+       ('Mary',  'Jane', 5, 1),
+       ('Billy',  'Bob', 3, 1),
+       ('Joe',  'Shmoe', 4, 3),
+       ('Crazy',  'Mike', 6, 3),
+       ('Willy',  'Eye', 2, 2),
+       ('Ron',  'Gun', 7, 2);

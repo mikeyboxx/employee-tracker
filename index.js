@@ -9,44 +9,6 @@ const promptNumber = require('./utils/promptNumber');
 
 (async ()=>{
   try {
-    // let rows = {};
-    // const values = await db.getDepartments();
-    // console.table(values);
-
-    // const choices = [
-    //   {
-    //     name: 'View All Departments',
-    //     value: 0,
-    //   },
-    //   {
-    //     name: 'View All Roles',
-    //     value: 1,
-    //   },
-    //   {
-    //     name: 'View All Employees',
-    //     value: 2,
-    //   },
-    //   {
-    //     name: new inquirer.Separator(),
-    //     value: -1,
-    //   }
-    //   {
-    //     name: 'View All Departments',
-    //     value: 4,
-    //   },
-    //   {
-    //     name: 'View All Roles',
-    //     value: 5,
-    //   },
-    //   {
-    //     name: 'View All Employees',
-    //     value: 2,
-    //   },
-    //   {
-    //     name: new inquirer.Separator(),
-    //     value: 3,
-    //   }
-    // ];
     const choices = [
       'View All Departments',
       'View All Roles',
@@ -56,9 +18,8 @@ const promptNumber = require('./utils/promptNumber');
       'Add Role',
       'Add Employee',
       new inquirer.Separator(),
-      'Update Department',
-      'Update Role',
-      'Update Employee',
+      'Update Employee Role',
+      'Update Employee Manager',
       new inquirer.Separator(),
       'Delete Department',
       'Delete Role',
@@ -66,33 +27,8 @@ const promptNumber = require('./utils/promptNumber');
       new inquirer.Separator(),
       'Quit'
     ];
-
-const Reset = "\x1b[0m";
-const Bright = "\x1b[1m";
-const Dim = "\x1b[2m";
-const Underscore = "\x1b[4m";
-const Blink = "\x1b[5m";
-const Reverse = "\x1b[7m";
-const Hidden = "\x1b[8m";
-
-const FgBlack = "\x1b[30m";
-const FgRed = "\x1b[31m";
-const FgGreen = "\x1b[32m";
-const FgYellow = "\x1b[33m";
-const FgBlue = "\x1b[34m";
-const FgMagenta = "\x1b[35m";
-const FgCyan = "\x1b[36m";
-const FgWhite = "\x1b[37m";
-
-const BgBlack = "\x1b[40m";
-const BgRed = "\x1b[41m";
-const BgGreen = "\x1b[42m";
-const BgYellow = "\x1b[43m";
-const BgBlue = "\x1b[44m";
-const BgMagenta = "\x1b[45m";
-const BgCyan = "\x1b[46m";
-const BgWhite = "\x1b[47m";
     
+    const FgCyan = "\x1b[36m";
     console.clear();
     let choice = await promptList('What would you like to do?', choices); 
 
@@ -127,6 +63,7 @@ const BgWhite = "\x1b[47m";
 
       if (choice === 'Add Department'){
         const name = await promptInput('What is the name of the department?');
+        
         const {insertId} = await db.addDepartment(name);
         console.log(`\n${FgCyan}Added ${name} department to the database. id: ${insertId}`);
       };
@@ -141,11 +78,99 @@ const BgWhite = "\x1b[47m";
           const title = await promptInput('What is the name of the role?');
           const salary = await promptNumber('What is the salary of the role?');
           const department_id = await promptList('Which department does the role belong to?', deptChoices); 
+          
           const {insertId} = await db.addRole(title, salary, department_id);
           console.log(`\n${FgCyan}Added ${title} role to the database. id: ${insertId}`);
         }
       }
+
+      if (choice === 'Add Employee'){
+        let values = await db.getRoles();
+        
+        if (values.length === 0) 
+          console.log(`\n${FgCyan}There are no Roles and/or Departments to add the employee to.`)
+        else {
+          const roleChoices = values.map(el => ({name:  el.Title + ' - ' + el.Department, value: el.Id }));
+          const first_name = await promptInput(`What is the employee's first name?`);
+          const last_name = await promptInput(`What is the employee's last name?`);
+          const role_id = await promptList(`What is the employee's role?`, roleChoices); 
+
+          let manager_id = null;
+          values = await db.getEmployeeNames();
+          if (values.length > 0) {
+            const managerChoices = values.map(el => ({name: el.first_name + ' ' + el.last_name, value: el.id }));
+            manager_id = await promptList(`What is the employee's manager?`, managerChoices);
+          };
+
+          const {insertId} = await db.addEmployee(first_name, last_name, role_id, manager_id);
+          console.log(`\n${FgCyan}Added ${first_name} ${last_name} to the database. id: ${insertId}`);
+        }
+      }
       
+      if (choice === 'Delete Department'){
+        const values = await db.getDepartments();
+        
+        if (values.length === 0) 
+          console.log(`\n${FgCyan}There are no Departments to delete.`)
+        else {
+          const deptChoices = values.map(el => ({name: el.name, value: el.id }));
+          const department_id = await promptList('Which department would like to delete?', deptChoices); 
+          const {name: departmentName} = deptChoices.find(el => el.value === department_id);
+          
+          await db.deleteDepartment(department_id);
+          console.log(`\n${FgCyan}${departmentName} department was deleted from the database.`);
+        }
+      };
+
+      if (choice === 'Delete Role'){
+        const values = await db.getRoles();
+        
+        if (values.length === 0) 
+          console.log(`\n${FgCyan}There are no Roles to delete.`)
+        else {
+          const roleChoices = values.map(el => ({name: el.name, value: el.id }));
+          const role_id = await promptList('Which department would like to delete?', roleChoices); 
+          const {name: title} = roleChoices.find(el => el.value === role_id);
+         
+          await db.deleteRole(role_id);
+          console.log(`\n${FgCyan}${title} role was deleted from the database.`);
+        }
+      };
+
+      if (choice === 'Delete Employee'){
+        const values = await db.getEmployees();
+        
+        if (values.length === 0) 
+          console.log(`\n${FgCyan}There are no Employees to delete.`)
+        else {
+          const employeeChoices = values.map(el => ({name: el.first_name + ' ' + el.last_name, value: el.id }));
+          const employee_id = await promptList('Which employee would like to delete?', employeeChoices); 
+          const {name} = employeeChoices.find(el => el.value === employee_id);
+          await db.deleteEmployee(employee_id);
+
+          console.log(`\n${FgCyan}${name} employee was deleted from the database.`);
+        }
+      };
+
+      if (choice === 'Update Employee Role'){
+        const values = await db.getEmployeeNames();
+        
+        if (values.length === 0) 
+          console.log(`\n${FgCyan}There are no Employees to update.`)
+        else {
+
+            const employeeChoices = values.map(el => ({name: el.first_name + ' ' + el.last_name, value: el.id }));
+            const employee_id = await promptList(`Which employee's role do you want to update?`, employeeChoices);
+            
+            let values = await db.getRoles();
+            const roleChoices = values.map(el => ({name:  el.Title + ' - ' + el.Department, value: el.Id }));
+            const role_id = await promptList(`What is the employee's new role?`, roleChoices);
+
+            
+        
+        }
+      }
+
       choice = await promptList('\nWhat would you like to do now?', choices); 
     }
 
