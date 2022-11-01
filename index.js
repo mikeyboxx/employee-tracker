@@ -14,6 +14,7 @@ const addDepartment = require('./helpers/addDepartment');
 const addRole = require('./helpers/addRole');
 const addEmployee = require('./helpers/addEmployee');
 const deleteDepartment = require('./helpers/deleteDepartment');
+const deleteRole = require('./helpers/deleteRole');
 
 const FgCyan = "\x1b[36m";
 
@@ -124,18 +125,19 @@ const FgCyan = "\x1b[36m";
       };
 
       if (choice === 'Delete Role'){
-        const values = await db.getRoles();
+        await deleteRole(db);
+        // const values = await db.getRoles();
         
-        if (values.length === 0) 
-          console.log(`\n${FgCyan}There are no Roles to delete.`)
-        else {
-          const roleChoices = values.map(el => ({name: el.name, value: el.id }));
-          const role_id = await promptList('Which department would like to delete?', roleChoices); 
-          const {name: title} = roleChoices.find(el => el.value === role_id);
+        // if (values.length === 0) 
+        //   console.log(`\n${FgCyan}There are no Roles to delete.`)
+        // else {
+        //   const roleChoices = values.map(el => ({name: el.name, value: el.id }));
+        //   const role_id = await promptList('Which department would like to delete?', roleChoices); 
+        //   const {name: title} = roleChoices.find(el => el.value === role_id);
          
-          await db.deleteRole(role_id);
-          console.log(`\n${FgCyan}${title} role was deleted from the database.`);
-        }
+        //   await db.deleteRole(role_id);
+        //   console.log(`\n${FgCyan}${title} role was deleted from the database.`);
+        // }
       };
 
       if (choice === 'Delete Employee'){
