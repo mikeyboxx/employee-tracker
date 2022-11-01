@@ -13,6 +13,7 @@ const viewAllEmployees = require('./helpers/viewAllEmployees');
 const addDepartment = require('./helpers/addDepartment');
 const addRole = require('./helpers/addRole');
 const addEmployee = require('./helpers/addEmployee');
+const deleteDepartment = require('./helpers/deleteDepartment');
 
 const FgCyan = "\x1b[36m";
 
@@ -107,18 +108,19 @@ const FgCyan = "\x1b[36m";
       }
       
       if (choice === 'Delete Department'){
-        const values = await db.getDepartments();
+        await deleteDepartment(db);
+        // const values = await db.getDepartments();
         
-        if (values.length === 0) 
-          console.log(`\n${FgCyan}There are no Departments to delete.`)
-        else {
-          const deptChoices = values.map(el => ({name: el.name, value: el.id }));
-          const department_id = await promptList('Which department would like to delete?', deptChoices); 
-          const {name: departmentName} = deptChoices.find(el => el.value === department_id);
+        // if (values.length === 0) 
+        //   console.log(`\n${FgCyan}There are no Departments to delete.`)
+        // else {
+        //   const deptChoices = values.map(el => ({name: el.name, value: el.id }));
+        //   const department_id = await promptList('Which department would like to delete?', deptChoices); 
+        //   const {name: departmentName} = deptChoices.find(el => el.value === department_id);
           
-          await db.deleteDepartment(department_id);
-          console.log(`\n${FgCyan}${departmentName} department was deleted from the database.`);
-        }
+        //   await db.deleteDepartment(department_id);
+        //   console.log(`\n${FgCyan}${departmentName} department was deleted from the database.`);
+        // }
       };
 
       if (choice === 'Delete Role'){
