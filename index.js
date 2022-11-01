@@ -6,41 +6,41 @@
   const promptList = require('./utils/promptList');
 const promptInput = require('./utils/promptInput');
 const promptNumber = require('./utils/promptNumber');
+const choices = require('./utils/mainMenu');
+
+const FgCyan = "\x1b[36m";
+
+const viewAllDepartments = db => new Promise(async (res,rej)=>{
+  const FgCyan = "\x1b[36m";
+  const values = await db.getDepartments();
+
+  if (values.length === 0) 
+    console.log(`\n${FgCyan}There are no Departments.`)
+  else
+    console.table(`\n${FgCyan}Departments`, values);
+
+  res(true);
+});
+  
 
 (async ()=>{
   try {
-    const choices = [
-      'View All Departments',
-      'View All Roles',
-      'View All Employees',
-      new inquirer.Separator(),
-      'Add Department',
-      'Add Role',
-      'Add Employee',
-      new inquirer.Separator(),
-      'Update Employee Role',
-      'Update Employee Manager',
-      new inquirer.Separator(),
-      'Delete Department',
-      'Delete Role',
-      'Delete Employee',
-      new inquirer.Separator(),
-      'Quit'
-    ];
     
-    const FgCyan = "\x1b[36m";
     console.clear();
     let choice = await promptList('What would you like to do?', choices); 
 
 
+
+
     while (choice !== 'Quit'){
       if (choice === 'View All Departments'){
-        const values = await db.getDepartments();
+        await viewAllDepartments(db);
+        // const values = await db.getDepartments();
 
-        if (values.length === 0) 
-          console.log(`\n${FgCyan}There are no Departments.`)
-        else
-          console.table(`\n${FgCyan}Departments`, values);
+        // if (values.length === 0) 
+        //   console.log(`\n${FgCyan}There are no Departments.`)
+        // else
+        //   console.table(`\n${FgCyan}Departments`, values);
       };
       
       if (choice === 'View All Roles'){
@@ -153,21 +153,22 @@ const promptNumber = require('./utils/promptNumber');
       };
 
       if (choice === 'Update Employee Role'){
-        const values = await db.getEmployeeNames();
+        let values = await db.getEmployeeNames();
         
         if (values.length === 0) 
           console.log(`\n${FgCyan}There are no Employees to update.`)
         else {
-
             const employeeChoices = values.map(el => ({name: el.first_name + ' ' + el.last_name, value: el.id }));
             const employee_id = await promptList(`Which employee's role do you want to update?`, employeeChoices);
             
-            let values = await db.getRoles();
+            values = await db.getRoles();
             const roleChoices = values.map(el => ({name:  el.Title + ' - ' + el.Department, value: el.Id }));
             const role_id = await promptList(`What is the employee's new role?`, roleChoices);
 
-            
-        
+            const [{first_name, last_name,  manager_id }] = await db.getEmployee(employee_id);
+
+            await db.updateEmployee(employee_id, first_name, last_name, role_id, manager_id);
+            console.log(`\n${FgCyan}${first_name} ${last_name} has been updated.`);
         }
       }
 

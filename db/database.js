@@ -19,7 +19,7 @@ module.exports = {
                               ORDER BY b.name, a.title;`),
 
   getEmployees: () => dbExecute(`SELECT a.id, a.first_name as 'First Name', a.last_name as 'Last Name', 
-                                        c.title as 'Title', c.salary as 'Salary', d.name as 'Department', 
+                                        c.title as 'Title', d.name as 'Department', c.salary as 'Salary',
                                         IFNULL(CONCAT(b.first_name, " ", b.last_name), '') as 'Manager'
                                    FROM (employees a, roles c, departments d)
                         LEFT OUTER JOIN employees b 
@@ -30,8 +30,9 @@ module.exports = {
 
   getEmployeeNames: () => dbExecute(`SELECT id, first_name, last_name FROM employees ORDER BY id;`), 
 
-  getEmployee: (id) => dbExecute(`SELECT * FROM employees 
-                                   WHERE id = ${id};`),
+  getEmployee: id => dbExecute(`SELECT id, first_name, last_name, role_id, manager_id 
+                                  FROM employees 
+                                 WHERE id = ${id};`),
 
   addDepartment: name => 
     dbExecute(`INSERT INTO departments (name) 
