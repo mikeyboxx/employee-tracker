@@ -10,7 +10,6 @@ module.exports = [
   'Add Employee',
   new inquirer.Separator(),
   'Update Employee Role',
-  'Update Employee Manager',
   new inquirer.Separator(),
   'Delete Department',
   'Delete Role',
